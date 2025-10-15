@@ -1,16 +1,18 @@
 # TITULO DEL DESIGN DOC
 
-Link: [Link a este design doc](#)
+Análisis de Panaderías en Ensenada
+
+Link: [](#)
 
 Author(s): Rosa Lizbeth Barcenas Mancilla
 
-Status: [Draft, Ready for review, In Review, Reviewed]
+Status: [Draft]
 
-Ultima actualización: YYYY-MM-DD
+Ultima actualización: 2025-10-14
 
 ## Contenido
 
-- Goals No tiene
+- Goals
 - Non-Goals
 - Background
 - Overview
@@ -26,81 +28,59 @@ Ultima actualización: YYYY-MM-DD
 
 ## Links
 
-- [Un link](#)
-- [Otro link](#)
-
 ## Objetivo
 
-_Que y porque estamos haciendo esto?_
-
-_Incluye contexto para las personas que no están familiarizadas con el proyecto._
-
-_Mantenlo corto, elabora en **Background, Overview y Detailed Design**_
-
-_Añade screenshots / mocks si lo ves necesario_
+Analizar panaderías en Ensenada para ver dónde hay muchas, dónde hay pocas y qué panaderías necesitan mejorar su presencia en internet.
 
 ## Goals
 
-- Goals
+- Ver cuántas panaderías hay en cada zona de Ensenada.
+- Detectar zonas con demasiadas panaderías o con pocas.
+- Saber qué panaderías no tienen web o redes sociales.
+- Mostrar las panaderias en graficas o talves una grafica.
 
 ## Non-Goals
 
-- Non-Goals
+- No se analizará saturación de zonas.
+- No se harán recomendaciones sobre dónde abrir nuevas panaderías.
+- No se crearán planes de marketing.
+- No se harán comparaciones entre zonas o sectores económicos.
+- No se optimizara rutas o negocios.
+- No se ofrecerán servicios de creación de páginas web o chatbots.
+- No se procesarán datos fuera de lo que aparece en la lista de panaderías.
 
 ## Background
 
-_Cuál es el contexto de este proyecto?_
-
-_Incluye recursos, como otros design docs si es necesario_
-
-_No escribas acerca de tu diseño o requerimientos aquí_
+Se cuenta con una lista de panaderías en Ensenada con su ubicación, tamaño (micro, pequeña, mediana) y si tienen web o redes sociales.
 
 ## Overview
 
-_Overview a alto nivel de tu propuesta_
+El proyecto mostrará:
 
-_Esta sección debería ser entendible por nuevos miembros de tu equipo que no están relacionados al proyecto_
-
-_Pon detalles en la siguiente sección_
+- Cuántas panaderías hay en cada zona.
+- Zonas saturadas o con baja oferta.
+- Panaderías sin presencia digital.
 
 ## Detailed Design
-
-_Usa diagramas donde veas necesario_
-
-_Herramientas como [Excalidraw](https://excalidraw.com) son buenos recursos para esto_
-
-_Cubre los cambios principales:_
-
-_- Cuales son las nuevas funciones que vas a escribir?_
-_- Porque necesitas nuevos componentes?_
-_- Hay código que puede ser reusable?_
-
-_No elabores minuciosamente la implementación._
 
 ## Solution 1
 
 ### Frontend
 
-_Frontend…_
+Tabla simple con nombre, zona, tamaño y presencia digital.
 
 ### Backend
 
-_Backend…_
-
-## Solution 2
-
-### Frontend
-
-_Frontend…_
-
-### Backend
-
-_Backend…_
+- Base de datos o lista con información de panaderías.
+- Funciones simples para contar panaderías por zona y detectar falta de web.
 
 ## Consideraciones
 
-_Preocupaciones / trade-offs / tech debt_
+- Los datos pueden estar incompletos.
+- No se considerarán panaderías que no estén en la lista.
 
 ## Métricas
 
-_Que información necesitas para validar antes de lanzar este feature?_
+- Número de panaderías por zona.
+- Zonas saturadas o con poca oferta.
+- Porcentaje de panaderías sin web o redes sociales.
