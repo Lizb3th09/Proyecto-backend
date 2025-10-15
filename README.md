@@ -18,9 +18,6 @@ Ultima actualización: 2025-10-15
   - Solucion 1
     - Frontend
     - Backend
-  - Solucion 2
-    - Frontend
-    - Backend
 - Consideraciones
 - Métricas
 
