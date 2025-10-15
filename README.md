@@ -37,7 +37,7 @@ Analizar panaderías en Ensenada para ver dónde hay muchas, dónde hay pocas y 
 - Ver cuántas panaderías hay en cada zona de Ensenada.
 - Detectar zonas con demasiadas panaderías o con pocas.
 - Saber qué panaderías no tienen web o redes sociales.
-- Mostrar las panaderias en graficas o talves una grafica.
+- Mostrar las panaderias o talves una graficas.
 
 ## Non-Goals
 
