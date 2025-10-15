@@ -1,6 +1,4 @@
-# TITULO DEL DESIGN DOC
-
-Análisis de Panaderías en Ensenada
+# Análisis de Gimnasios en Ensenada
 
 Link: [](#)
 
@@ -8,7 +6,7 @@ Author(s): Rosa Lizbeth Barcenas Mancilla
 
 Status: [Draft]
 
-Ultima actualización: 2025-10-14
+Ultima actualización: 2025-10-15
 
 ## Contenido
 
@@ -30,36 +28,33 @@ Ultima actualización: 2025-10-14
 
 ## Objetivo
 
-Analizar panaderías en Ensenada para ver dónde hay muchas, dónde hay pocas y qué panaderías necesitan mejorar su presencia en internet.
+Analizar gimnasios en Ensenada para ver dónde hay muchos, dónde hay pocos y qué gimnasios necesitan mejorar su presencia en internet.
 
 ## Goals
 
-- Ver cuántas panaderías hay en cada zona de Ensenada.
-- Detectar zonas con demasiadas panaderías o con pocas.
-- Saber qué panaderías no tienen web o redes sociales.
-- Mostrar las panaderias o talves una graficas.
+- Ver cuántos gimnasios hay en cada zona de Ensenada.
+- Detectar zonas con demasiados gimnasios o con pocas opciones.
+- Saber qué gimnasios no tienen web o redes sociales.
+- Mostrar los gimnasios en una tabla o mapa simple.
 
 ## Non-Goals
 
-- No se analizará saturación de zonas.
-- No se harán recomendaciones sobre dónde abrir nuevas panaderías.
-- No se crearán planes de marketing.
-- No se harán comparaciones entre zonas o sectores económicos.
-- No se optimizara rutas o negocios.
-- No se ofrecerán servicios de creación de páginas web o chatbots.
-- No se procesarán datos fuera de lo que aparece en la lista de panaderías.
+- No se harán planes de marketing completos.
+- No se procesarán datos que no estén en la lista oficial.
+- No se agregarán gimnasios nuevos fuera de la lista.
+- No se harán funciones extras no aprobadas por el autor.
 
 ## Background
 
-Se cuenta con una lista de panaderías en Ensenada con su ubicación, tamaño (micro, pequeña, mediana) y si tienen web o redes sociales.
+Se cuenta con una lista de gimnasios en Ensenada con su ubicación, tamaño (micro, pequeña, mediana) y si tienen web o redes sociales.
 
 ## Overview
 
 El proyecto mostrará:
 
-- Cuántas panaderías hay en cada zona.
+- Cuántos gimnasios hay en cada zona.
 - Zonas saturadas o con baja oferta.
-- Panaderías sin presencia digital.
+- Gimnasios sin presencia digital.
 
 ## Detailed Design
 
@@ -71,16 +66,16 @@ Tabla simple con nombre, zona, tamaño y presencia digital.
 
 ### Backend
 
-- Base de datos o lista con información de panaderías.
-- Funciones simples para contar panaderías por zona y detectar falta de web.
+- Base de datos o lista con información de gimnasios.
+- Funciones para contar gimnasios por zona y detectar falta de web o redes sociales.
 
 ## Consideraciones
 
 - Los datos pueden estar incompletos.
-- No se considerarán panaderías que no estén en la lista.
+- No se considerarán gimnasios que no estén en la lista.
 
 ## Métricas
 
-- Número de panaderías por zona.
+- Número de gimnasios por zona.
 - Zonas saturadas o con poca oferta.
-- Porcentaje de panaderías sin web o redes sociales.
+- Porcentaje de gimnasios sin web o redes sociales.
