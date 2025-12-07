@@ -31,8 +31,8 @@ Analizar gimnasios en Ensenada para ver dónde hay muchos, dónde hay pocos y qu
 
 - Ver cuántos gimnasios hay en cada zona de Ensenada.
 - Detectar zonas con demasiados gimnasios o con pocas opciones.
-- Saber qué gimnasios no tienen web o redes sociales.
-- Mostrar los gimnasios en una tabla o mapa simple.
+- Saber qué gimnasios no tienen  redes sociales.
+- Mostrar los gimnasios en un mapa simple.
 
 ## Non-Goals
 
@@ -43,7 +43,7 @@ Analizar gimnasios en Ensenada para ver dónde hay muchos, dónde hay pocos y qu
 
 ## Background
 
-Se cuenta con una lista de gimnasios en Ensenada con su ubicación, tamaño (micro, pequeña, mediana) y si tienen web o redes sociales.
+Se cuenta con una lista de gimnasios en Ensenada con su ubicación y si tienen web o redes sociales.
 
 ## Overview
 
@@ -59,7 +59,7 @@ El proyecto mostrará:
 
 ### Frontend
 
-Tabla simple con nombre, zona, tamaño y presencia digital.
+mapa simple con nombre, zona y presencia digital.
 
 ### Backend
 
