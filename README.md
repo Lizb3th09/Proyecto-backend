@@ -76,3 +76,17 @@ mapa simple con nombre, zona y presencia digital.
 - Número de gimnasios por zona.
 - Zonas saturadas o con poca oferta.
 - Porcentaje de gimnasios sin web o redes sociales.
+
+# Imagenes :
+
+<img width="1886" height="908" alt="image" src="https://github.com/user-attachments/assets/7f1b5a43-dcff-4173-8937-d5642a55667b" />
+<img width="1888" height="920" alt="image" src="https://github.com/user-attachments/assets/2c3eb357-feec-44f7-8701-b8d92087db29" />
+<img width="1883" height="910" alt="image" src="https://github.com/user-attachments/assets/3748d786-9d24-42d3-8556-3dd8af00dba0" />
+<img width="1893" height="918" alt="image" src="https://github.com/user-attachments/assets/127bfd24-bbb5-4459-a43f-a32b35bc6920" />
+<img width="1905" height="914" alt="image" src="https://github.com/user-attachments/assets/6bced4e9-d5b9-459e-9e61-90937677c6ec" />
+<img width="1890" height="919" alt="image" src="https://github.com/user-attachments/assets/f30c8d97-7296-4cb3-959f-a1ce1cb3ebf8" />
+
+
+
+
+
