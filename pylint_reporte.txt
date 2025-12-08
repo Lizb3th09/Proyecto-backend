@@ -1,0 +1,13 @@
+************* Module app
+app.py:161:0: C0301: Line too long (123/100) (line-too-long)
+app.py:166:0: C0301: Line too long (112/100) (line-too-long)
+app.py:182:0: C0301: Line too long (127/100) (line-too-long)
+app.py:200:0: C0301: Line too long (104/100) (line-too-long)
+app.py:207:0: C0301: Line too long (105/100) (line-too-long)
+app.py:211:0: C0301: Line too long (105/100) (line-too-long)
+app.py:216:0: C0301: Line too long (105/100) (line-too-long)
+app.py:38:11: W0718: Catching too general exception Exception (broad-exception-caught)
+
+------------------------------------------------------------------
+Your code has been rated at 9.34/10 (previous run: 9.34/10, +0.00)
+
