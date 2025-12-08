@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Mapa de Gimnasios en Ensenada</title>
+    <title>Mapa de Gimnasios Ensenada</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- MarkerCluster CSS -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"
@@ -23,18 +21,63 @@
         font-family: Arial, sans-serif;
         background: #f9f9f9;
       }
+
       h2 {
         text-align: center;
         padding: 20px 0;
         color: #444;
       }
+
       #map {
-        height: 90vh;
+        height: 100vh;
         width: 100%;
+        position: relative;
       }
+
+      #grafica-container {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+      }
+
+      #puntos-leyenda {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+
+      .punto {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .punto span {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      canvas {
+        width: 100% !important;
+        height: calc(100% - 25px) !important;
+      }
+
       .popup-content {
         font-size: 14px;
       }
+
       .popup-content b {
         color: #c0392b;
       }
@@ -42,91 +85,150 @@
   </head>
   <body>
     <h2>Mapa de Gimnasios en Ensenada</h2>
+
     <div id="map"></div>
 
-    <!-- Leaflet JS -->
+    <div id="grafica-container">
+      <div id="puntos-leyenda">
+        <div class="punto">
+          <span style="background: red"></span>Muchos gimnasios
+        </div>
+        <div class="punto">
+          <span style="background: blue"></span>Pocos gimnasios
+        </div>
+      </div>
+      <canvas id="graficaContactos"></canvas>
+    </div>
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <!-- MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <!-- Leaflet Heatmap JS -->
-    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-      // 1. Crear mapa centrado en Ensenada
-      var map = L.map("map").setView([31.8659, -116.5965], 12);
+      const map = L.map("map").setView([31.82, -116.7], 12);
 
-      // 2. Mapa base elegante
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
         {
           attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+            '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; CARTO',
           subdomains: "abcd",
           maxZoom: 19,
         }
       ).addTo(map);
 
-      // 3. Marker rojo simple
-      var redMarker = L.icon({
-        iconUrl:
-          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-        shadowSize: [41, 41],
+      const limpio = (valor) => valor && valor !== "-" && valor !== "0";
+
+      const contactos = {
+        soloTelefono: 0,
+        soloCorreo: 0,
+        soloWeb: 0,
+        ninguno: 0,
+        multiples: 0,
+      };
+
+      function getClusterIcon(count) {
+        let color = "blue";
+        if (count > 5) color = "red";
+        return L.divIcon({
+          html: `<div style="background-color:${color};border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;">${count}</div>`,
+          className: "custom-cluster-icon",
+          iconSize: [30, 30],
+        });
+      }
+
+      const markers = L.markerClusterGroup({
+        iconCreateFunction: function (cluster) {
+          return getClusterIcon(cluster.getChildCount());
+        },
       });
 
-      // 4. Crear grupo de clusters
-      var markers = L.markerClusterGroup();
-
-      // 5. Preparar array de heatmap
-      var heatPoints = [];
-
-      // 6. Parámetros de BBOX
-      var lat_min = 31.5;
-      var lat_max = 32.2;
-      var lon_min = -117.0;
-      var lon_max = -116.3;
-
-      // 7. Cargar datos desde la API
-      fetch(
-        `/api/datos_negocios?lat_min=${lat_min}&lat_max=${lat_max}&lon_min=${lon_min}&lon_max=${lon_max}`
-      )
-        .then((response) => response.json())
+      fetch("/api/datos_negocios")
+        .then((res) => res.json())
         .then((data) => {
-          data.forEach(function (negocio) {
-            if (negocio.latitud && negocio.longitud) {
-              // Marker
-              var marker = L.marker([negocio.latitud, negocio.longitud], {
-                icon: redMarker,
-              }).bindPopup(
-                `<div class="popup-content">
-              <b>${negocio.nom_estab}</b><br>
-              Tel: ${negocio.telefono || "-"}<br>
-              Email: ${negocio.correoelec || "-"}<br>
-              Web: ${negocio.web || "-"}
-            </div>`
-              );
-              markers.addLayer(marker);
+          data.forEach((negocio) => {
+            const tieneTelefono = limpio(negocio.telefono);
+            const tieneCorreo = limpio(negocio.correoelec);
+            const tieneWeb = limpio(negocio.web);
 
-              // Agregar al heatmap
-              heatPoints.push([negocio.latitud, negocio.longitud, 1]);
+            const totalDatos = [tieneTelefono, tieneCorreo, tieneWeb].filter(
+              Boolean
+            ).length;
+
+            if (totalDatos === 0) contactos.ninguno++;
+            else if (totalDatos === 1) {
+              if (tieneTelefono) contactos.soloTelefono++;
+              else if (tieneCorreo) contactos.soloCorreo++;
+              else if (tieneWeb) contactos.soloWeb++;
+            } else if (totalDatos > 1) contactos.multiples++;
+
+            if (negocio.latitud && negocio.longitud) {
+              const marker = L.marker([
+                parseFloat(negocio.latitud),
+                parseFloat(negocio.longitud),
+              ]).bindPopup(`
+                <div class="popup-content">
+                  <b>${negocio.nom_estab}</b><br>
+                  Tel: ${negocio.telefono || "-"}<br>
+                  Email: ${negocio.correoelec || "-"}<br>
+                  Web: ${negocio.web || "-"}
+                </div>
+              `);
+              markers.addLayer(marker);
             }
           });
 
-          // Agregar clusters al mapa
           map.addLayer(markers);
 
-          // Crear heatmap
-          var heat = L.heatLayer(heatPoints, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 17,
-            gradient: { 0.2: "blue", 0.4: "lime", 0.6: "orange", 0.8: "red" },
-          }).addTo(map);
+          const ctx = document
+            .getElementById("graficaContactos")
+            .getContext("2d");
+          new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: [
+                "Solo Teléfono",
+                "Solo Correo",
+                "Solo Web",
+                "Ninguno",
+                "Múltiples",
+              ],
+              datasets: [
+                {
+                  label: "Cantidad de gimnasios",
+                  data: [
+                    contactos.soloTelefono,
+                    contactos.soloCorreo,
+                    contactos.soloWeb,
+                    contactos.ninguno,
+                    contactos.multiples,
+                  ],
+                  backgroundColor: [
+                    "#34db69ff",
+                    "#9b59b6",
+                    "#ff1c82ff",
+                    "#fffb00ff",
+                    "#f39c12",
+                  ],
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                title: {
+                  display: true,
+                  text: "Gimnasios según medios de contacto",
+                  font: { size: 14 },
+                },
+              },
+              scales: { y: { beginAtZero: true, precision: 0 } },
+            },
+          });
         })
-        .catch((error) => console.error("Error cargando datos:", error));
+        .catch((err) => console.error("Error al cargar gimnasios:", err));
     </script>
   </body>
 </html>
