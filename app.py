@@ -3,9 +3,13 @@
 Carga datos desde CSV y provee endpoints para filtrar y consultar gimnasios.
 """
 
-import math  # estándar
-import pandas as pd  # terceros
-from flask import Flask, request, jsonify, render_template  # terceros
+import math  
+import pandas as pd  
+from flask import Flask, request, jsonify, render_template 
+
+#  Rate Limiting
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # CONFIG
 CSV_FILE = 'data/db-ens-RL(Hoja1).csv'
@@ -17,6 +21,13 @@ LON_MAX = -116.5
 
 app = Flask(__name__)
 df_maestro = pd.DataFrame()
+
+#  limite global: solo 10 peticiones por día (por IP)
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=["10 per day"]
+)
 
 
 def load_master_dataframe():
@@ -157,7 +168,7 @@ def gimnasios_por_saturacion():
         """Calcula distancia Haversine entre dos coordenadas en km."""
         radio_tierra = 6371
         dlat = math.radians(lat2 - lat1)
-        dlon = math.radians(lon2 - lon1)
+        dlon = math.radians(lat2 - lon1)
         a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
         return radio_tierra * c
@@ -179,7 +190,8 @@ def gimnasios_por_saturacion():
 
     df_maestro['saturacion'] = df_maestro['gimnasios_cercanos'].apply(saturacion_label)
 
-    columnas_salida = ['nom_estab', 'latitud', 'longitud', 'telefono', 'correoelec', 'web', 'gimnasios_cercanos', 'saturacion']
+    columnas_salida = ['nom_estab', 'latitud', 'longitud', 'telefono', 'correoelec', 'web',
+                       'gimnasios_cercanos', 'saturacion']
     datos_respuesta = df_maestro[columnas_salida].where(
         pd.notnull(df_maestro[columnas_salida]), None
     )
