@@ -1,13 +1,13 @@
-"""Módulo backend para manejar gimnasios en Ensenada.
+import math
+import pandas as pd
+from flask import Flask, request, jsonify, render_template
 
-Carga datos desde CSV y provee endpoints para filtrar y consultar gimnasios.
-"""
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
-import math  # estándar
-import pandas as pd  # terceros
-from flask import Flask, request, jsonify, render_template  # terceros
+# --------------------------------------------------------------------------------
+#  Configuracion :
 
-# CONFIG
 CSV_FILE = 'data/db-ens-RL(Hoja1).csv'
 
 LAT_MIN = 31.7
@@ -18,6 +18,14 @@ LON_MAX = -116.5
 app = Flask(__name__)
 df_maestro = pd.DataFrame()
 
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["300 per day"]
+)
+limiter.init_app(app)
+
+# --------------------------------------------------------------------------------
+#  Carga de datos:
 
 def load_master_dataframe():
     """Carga el CSV en el DataFrame maestro y limpia datos inválidos."""
@@ -27,17 +35,22 @@ def load_master_dataframe():
         # Limpiar coordenadas inválidas
         df = df[(df['latitud'].notna()) & (df['longitud'].notna())]
 
-        # Resetear índice
         df = df.reset_index(drop=True)
-        print(f"✅ DataFrame cargado. Total de gimnasios: {len(df)}")
+
+        print(f" DataFrame cargado. Total de gimnasios: {len(df)}")
         print("Servidor corriendo en http://localhost:5000")
+
         return df
+
     except FileNotFoundError:
-        print(f"❌ Archivo no encontrado: {CSV_FILE}")
+        print(f" Archivo no encontrado: {CSV_FILE}")
         return pd.DataFrame()
+
     except Exception as e:
-        print(f"❌ Error cargando CSV: {e}")
+        print(f" Error cargando CSV: {e}")
         return pd.DataFrame()
+
+# ------------------------------------------ENDPOINTS ------------------------------------------------------
 
 
 @app.route('/')
@@ -60,12 +73,14 @@ def api_datos_negocios():
     ]
 
     columnas_salida = ['nom_estab', 'latitud', 'longitud', 'telefono', 'correoelec', 'web']
+
     datos_respuesta = df_ensenada[columnas_salida].where(
         pd.notnull(df_ensenada[columnas_salida]), None
     )
 
     return jsonify(datos_respuesta.to_dict(orient='records')), 200
 
+# --------------------------------------------------------------------------------------------------------
 
 @app.route('/excel/negocio/gimnasios', methods=['GET'])
 def obtener_gimnasios():
@@ -74,11 +89,14 @@ def obtener_gimnasios():
         return jsonify({"error": "Datos no cargados"}), 500
 
     columnas_salida = ['nom_estab', 'latitud', 'longitud', 'telefono', 'correoelec', 'web']
+
     datos_respuesta = df_maestro[columnas_salida].where(
         pd.notnull(df_maestro[columnas_salida]), None
     )
+
     return jsonify(datos_respuesta.to_dict(orient='records')), 200
 
+# ------------------------------------------------------------------------------------------------------
 
 @app.route('/excel/negocio/ubicacion', methods=['GET'])
 def gimnasios_por_ubicacion():
@@ -93,6 +111,7 @@ def gimnasios_por_ubicacion():
         return jsonify({"error": "Parámetros de latitud y longitud inválidos o faltantes"}), 400
 
     delta = 0.01
+
     df_filtrado = df_maestro[
         (df_maestro['latitud'] >= lat - delta) &
         (df_maestro['latitud'] <= lat + delta) &
@@ -107,6 +126,7 @@ def gimnasios_por_ubicacion():
         "cantidad_gimnasios": len(df_filtrado)
     }), 200
 
+# --------------------------------------------------------------------------------------------------
 
 @app.route('/excel/negocio/contacto', methods=['GET'])
 def gimnasios_con_contacto():
@@ -121,26 +141,29 @@ def gimnasios_con_contacto():
     if not correoelec:
         return jsonify({"error": "Parámetro correoelec es requerido"}), 400
 
-    df_filtrado = df_maestro[df_maestro['correoelec'].str.contains(
-        correoelec, case=False, na=False
-    )]
+    df_filtrado = df_maestro[
+        df_maestro['correoelec'].str.contains(correoelec, case=False, na=False)
+    ]
 
     if telefono:
-        df_filtrado = df_filtrado[df_filtrado['telefono'].str.contains(
-            telefono, case=False, na=False
-        )]
+        df_filtrado = df_filtrado[
+            df_filtrado['telefono'].str.contains(telefono, case=False, na=False)
+        ]
+
     if paginweb:
-        df_filtrado = df_filtrado[df_filtrado['web'].str.contains(
-            paginweb, case=False, na=False
-        )]
+        df_filtrado = df_filtrado[
+            df_filtrado['web'].str.contains(paginweb, case=False, na=False)
+        ]
 
     columnas_salida = ['nom_estab', 'latitud', 'longitud', 'telefono', 'correoelec', 'web']
+
     datos_respuesta = df_filtrado[columnas_salida].where(
         pd.notnull(df_filtrado[columnas_salida]), None
     )
 
     return jsonify(datos_respuesta.to_dict(orient='records')), 200
 
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/excel/negocio/saturacion', methods=['GET'])
 def gimnasios_por_saturacion():
@@ -154,19 +177,29 @@ def gimnasios_por_saturacion():
         return jsonify({"error": "Parámetro radio inválido o faltante"}), 400
 
     def haversine(lat1, lon1, lat2, lon2):
-        """Calcula distancia Haversine entre dos coordenadas en km."""
-        radio_tierra = 6371
+        """Calcula distancia Haversine en km."""
+        R = 6371
         dlat = math.radians(lat2 - lat1)
         dlon = math.radians(lon2 - lon1)
-        a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+
+        a = (math.sin(dlat / 2) ** 2 +
+             math.cos(math.radians(lat1)) *
+             math.cos(math.radians(lat2)) *
+             math.sin(dlon / 2) ** 2)
+
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-        return radio_tierra * c
+        return R * c
 
     coords = df_maestro[['latitud', 'longitud']].to_numpy()
-    counts = [sum(haversine(lat1, lon1, lat2, lon2) <= radio for lat2, lon2 in coords) for lat1, lon1 in coords]
+
+    counts = [
+        sum(haversine(lat1, lon1, lat2, lon2) <= radio for lat2, lon2 in coords)
+        for lat1, lon1 in coords
+    ]
 
     df_maestro['gimnasios_cercanos'] = counts
 
+    # Cuartiles para clasificación
     poco = df_maestro['gimnasios_cercanos'].quantile(0.25)
     mucho = df_maestro['gimnasios_cercanos'].quantile(0.75)
 
@@ -179,17 +212,22 @@ def gimnasios_por_saturacion():
 
     df_maestro['saturacion'] = df_maestro['gimnasios_cercanos'].apply(saturacion_label)
 
-    columnas_salida = ['nom_estab', 'latitud', 'longitud', 'telefono', 'correoelec', 'web', 'gimnasios_cercanos', 'saturacion']
+    columnas_salida = [
+        'nom_estab', 'latitud', 'longitud', 'telefono',
+        'correoelec', 'web', 'gimnasios_cercanos', 'saturacion'
+    ]
+
     datos_respuesta = df_maestro[columnas_salida].where(
         pd.notnull(df_maestro[columnas_salida]), None
     )
 
     return jsonify(datos_respuesta.to_dict(orient='records')), 200
 
+# Filtros estadisticas
 
 @app.route('/api/filtro', methods=['GET'])
 def filtro_gimnasios():
-    """Filtra gimnasios por tipo: correo, telefono, web o saturación."""
+    """Filtra gimnasios por tipo: correo, teléfono, web o saturación."""
     if df_maestro.empty:
         return jsonify({"error": "Datos no cargados"}), 500
 
@@ -198,22 +236,31 @@ def filtro_gimnasios():
 
     if tipo == 'correo':
         df_filtrado = df_filtrado[df_filtrado['correoelec'].notna() & (df_filtrado['correoelec'] != '')]
+
     elif tipo == 'telefono':
         df_filtrado = df_filtrado[df_filtrado['telefono'].notna() & (df_filtrado['telefono'] != '')]
+
     elif tipo == 'web':
         df_filtrado = df_filtrado[df_filtrado['web'].notna() & (df_filtrado['web'] != '')]
+
     elif tipo == 'saturacion_mucho':
         if 'saturacion' not in df_filtrado.columns:
             return jsonify({"error": "Calcula saturación primero usando /excel/negocio/saturacion"}), 400
         df_filtrado = df_filtrado[df_filtrado['saturacion'] == 'mucho']
+
     elif tipo == 'saturacion_poco':
         if 'saturacion' not in df_filtrado.columns:
             return jsonify({"error": "Calcula saturación primero usando /excel/negocio/saturacion"}), 400
         df_filtrado = df_filtrado[df_filtrado['saturacion'] == 'poco']
+
     else:
         return jsonify({"error": "Tipo de filtro inválido"}), 400
 
-    columnas_salida = ['nom_estab', 'latitud', 'longitud', 'telefono', 'correoelec', 'web', 'saturacion']
+    columnas_salida = [
+        'nom_estab', 'latitud', 'longitud',
+        'telefono', 'correoelec', 'web', 'saturacion'
+    ]
+
     datos_respuesta = df_filtrado[columnas_salida].where(
         pd.notnull(df_filtrado[columnas_salida]), None
     )
@@ -221,7 +268,7 @@ def filtro_gimnasios():
     return jsonify(datos_respuesta.to_dict(orient='records')), 200
 
 
-# Correr programa
+# ------------------------- MAIN -------------------------
 if __name__ == '__main__':
     df_maestro = load_master_dataframe()
     app.run(debug=True)

@@ -16,7 +16,7 @@ BACKEND_URL = "http://127.0.0.1:5000/api/datos_negocios"
 try:
     response = requests.get(BACKEND_URL)
     if response.status_code == 429:
-        st.warning("Has alcanzado el límite de 10 requests por día. Intenta mañana.")
+        st.warning("Has alcanzado el límite de 300 requests por día. 🐣")
         st.stop()
     response.raise_for_status()
     df = pd.DataFrame(response.json())
