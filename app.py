@@ -20,7 +20,7 @@ df_maestro = pd.DataFrame()
 
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["300 per day"]
+    default_limits=["15 per day"]
 )
 limiter.init_app(app)
 
