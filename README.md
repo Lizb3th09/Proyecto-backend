@@ -86,7 +86,9 @@ mapa simple con nombre, zona y presencia digital.
 <img width="1905" height="914" alt="image" src="https://github.com/user-attachments/assets/6bced4e9-d5b9-459e-9e61-90937677c6ec" />
 <img width="1890" height="919" alt="image" src="https://github.com/user-attachments/assets/f30c8d97-7296-4cb3-959f-a1ce1cb3ebf8" />
 
+# Limites por dia:
 
+<img width="1887" height="908" alt="image" src="https://github.com/user-attachments/assets/e7253239-7ab1-4a3d-858b-9a836e41d864" />
 
 
 
