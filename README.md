@@ -114,8 +114,23 @@ mapa simple con nombre, zona y presencia digital.
 <img width="1787" height="445" alt="Captura de pantalla 2025-12-10 133644" src="https://github.com/user-attachments/assets/de6ef237-49f0-4158-b28d-76d8396cdc69"/>
 
 
-
-
 # Limites por dia:
 
 <img width="1887" height="908" alt="image" src="https://github.com/user-attachments/assets/e7253239-7ab1-4a3d-858b-9a836e41d864" />
+
+
+# Endpoints 
+
+<img width="765" height="506" alt="Captura de pantalla 2025-12-10 124829" src="https://github.com/user-attachments/assets/0b202cdc-5f16-42d8-b6e7-4a82b21092fd" />
+<img width="849" height="743" alt="Captura de pantalla 2025-12-10 125019" src="https://github.com/user-attachments/assets/dd4059b5-b523-43d4-a483-0e52ed7b2d8e" />
+<img width="1035" height="676" alt="Captura de pantalla 2025-12-10 125054" src="https://github.com/user-attachments/assets/72b1a6b3-6ff6-4fb7-ba8a-50310dca15ba"/>
+<img width="1581" height="791" alt="Captura de pantalla 2025-12-10 125127" src="https://github.com/user-attachments/assets/fb73296a-79ac-4c63-8378-2641e23a0ea8"/>
+<img width="1283" height="966" alt="Captura de pantalla 2025-12-10 125251" src="https://github.com/user-attachments/assets/806e1d88-70ba-482c-82c9-5a3b2d768fa6"/>
+
+saturacion:  http://localhost:5000/excel/negocio/saturacion?radio=0.5
+
+ubicación:  http://localhost:5000/excel/negocio/ubicacion?latitud=31.8&longitud=-116.7
+
+negocios: http://localhost:5000/api/datos_negocios
+
+todos gimnasios:  http://localhost:5000/excel/negocio/gimnasios
