@@ -90,7 +90,8 @@ mapa simple con nombre, zona y presencia digital.
 
 # Limites por dia:
 
-<img width="1887" height="908" alt="image" src="https://github.com/user-attachments/assets/e7253239-7ab1-4a3d-858b-9a836e41d864" />
+<img width="1904" height="906" alt="Captura de pantalla 2025-12-10 193824" src="https://github.com/user-attachments/assets/360e34e2-4c4f-401d-a962-c10b99778b0f"/>
+
 
 
 # Proyecto con visualizacion con streamlit:
@@ -115,6 +116,6 @@ mapa simple con nombre, zona y presencia digital.
 
 
 
-
-
 # Limites por dia:
+
+<img width="1887" height="908" alt="image" src="https://github.com/user-attachments/assets/e7253239-7ab1-4a3d-858b-9a836e41d864" />
